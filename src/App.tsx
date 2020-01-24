@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Square from "./components/Square/Square.module";
 import './App.css';
 
@@ -35,11 +35,22 @@ const buttonValues = [
     ]
 ];
 
-const Calculator: React.FC = () => {
+const Calculator = () => {
     const [calculableString, setCalculableString] = useState('');
     const [errorClasses, setErrorClasses] = useState();
 
-    function putTheRightEvent(item: string) {
+    useEffect(() => {
+        const putTheRightEventConst = (event: any) => {
+            putTheRightEvent(event.key);
+        };
+        window.addEventListener('keydown', putTheRightEventConst);
+
+        return () => {
+            window.removeEventListener('keydown', putTheRightEventConst);
+        };
+    }, [calculableString]);
+
+    const putTheRightEvent = (item: string) => {
         switch (item) {
             case '1':
             case '2':
@@ -83,7 +94,7 @@ const Calculator: React.FC = () => {
             default:
                 break;
         }
-    }
+    };
 
     return (
         <div className="calculator">
